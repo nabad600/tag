@@ -28,7 +28,6 @@ jobs:
           echo "Latest tag: $latestTag"
           echo "version=$latestTag" >> $GITHUB_OUTPUT
           echo "VERSION=$latestTag" >> $GITHUB_ENV
-          echo "${VERSION}" > .version
 
       - name: Print version
         run: |
