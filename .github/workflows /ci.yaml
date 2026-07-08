@@ -14,18 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set Docker tag
-      id: vars
-      run: |
-        echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
-
-        # Pre-releases build from the release tag; branch pushes get a qa tag
-        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-          TAG=${GITHUB_REF#refs/tags/}
-        else
-          TAG=qa-${GITHUB_SHA::7}-$(date +%s)
-        fi
-        echo "TAG=${TAG}" >> "$GITHUB_OUTPUT"
 
         echo "CREATED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
     - name: Get latest tag
