@@ -13,19 +13,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Get latest tag
-      id: latest-tag
-      run: |
-        git fetch --tags
-        latestTag=$(git describe --tags --abbrev=0)
-    
-        echo "Latest tag: $latestTag"
-        echo "version=$latestTag" >> $GITHUB_OUTPUT
-    - name: Get latest tag
-      run: |
-        echo "VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
-    
-    - name: Print version
-      run: |
-        echo "Version: $VERSION"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: latest-tag
+        run: |
+          git fetch --tags
+
+          latestTag=$(git tag --sort=-creatordate | head -n 1)
+
+          echo "Latest tag: $latestTag"
+          echo "version=$latestTag" >> $GITHUB_OUTPUT
+          echo "VERSION=$latestTag" >> $GITHUB_ENV
+
+      - name: Print version
+        run: |
+          echo "Version: $VERSION"
