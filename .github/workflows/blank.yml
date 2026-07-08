@@ -30,7 +30,6 @@ jobs:
         echo "CREATED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
     - name: Get latest tag
       run: |
-        cd legacy
         echo "VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
     
     - name: Print version
