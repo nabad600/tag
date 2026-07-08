@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     permissions:
-      contents: write
+      contents: read
 
     runs-on: ubuntu-latest
 
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get latest tag
+      - name: Get latest tag and update .version file
         id: latest-tag
         run: |
           git fetch --tags
@@ -26,9 +26,15 @@ jobs:
           latestTag=$(git tag --sort=-creatordate | head -n 1)
 
           echo "Latest tag: $latestTag"
+
+          # Set GitHub Actions variables
           echo "version=$latestTag" >> $GITHUB_OUTPUT
           echo "VERSION=$latestTag" >> $GITHUB_ENV
 
-      - name: Print version
+          # Update .version file
+          echo "$latestTag" > .version
+
+      - name: Verify version
         run: |
           echo "Version: $VERSION"
+          cat .version
