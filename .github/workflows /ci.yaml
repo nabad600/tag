@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "pre-release"]
+
+jobs:
+  build:
+    permissions:
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set Docker tag
+      id: vars
+      run: |
+        echo "REPOSITORY=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+
+        # Pre-releases build from the release tag; branch pushes get a qa tag
+        if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+          TAG=${GITHUB_REF#refs/tags/}
+        else
+          TAG=qa-${GITHUB_SHA::7}-$(date +%s)
+        fi
+        echo "TAG=${TAG}" >> "$GITHUB_OUTPUT"
+
+        echo "CREATED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+    - name: Get latest tag
+      run: |
+        cd legacy
+        echo "VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
+    
+    - name: Print version
+      run: |
+        echo "Version: $VERSION"
