@@ -32,7 +32,7 @@ jobs:
           echo "VERSION=$latestTag" >> $GITHUB_ENV
 
           # Update .version file
-          echo "$latestTag" > .version
+          echo "$latestTag" > ../.version
 
       - name: Verify version
         run: |
